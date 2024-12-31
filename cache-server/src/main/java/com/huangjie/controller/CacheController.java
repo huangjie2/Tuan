@@ -24,6 +24,7 @@ public class CacheController {
         return cache.get(key);
     }
 
+    //设置输入输出值类型
     @PostMapping("/put/{key}")
     public Mono<Void> put(@PathVariable String key, @RequestBody String value) {
         return cache.put(key, value);
