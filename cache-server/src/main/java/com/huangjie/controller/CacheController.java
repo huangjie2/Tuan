@@ -1,5 +1,6 @@
 package com.huangjie.controller;
 
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,9 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.huangjie.core.Cache;
 
 import reactor.core.publisher.Mono;
+import org.springframework.beans.factory.annotation.Value;
 
+@RefreshScope
 @RestController
 public class CacheController {
+    @Value("${useLocalCache:false}")
+    private boolean useLocalCache;
     private final Cache cache;
 
     public CacheController(Cache cache) {
