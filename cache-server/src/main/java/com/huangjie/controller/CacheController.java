@@ -1,5 +1,6 @@
 package com.huangjie.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,7 @@ import com.huangjie.core.Cache;
 
 import reactor.core.publisher.Mono;
 import org.springframework.beans.factory.annotation.Value;
-
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 @RefreshScope
 @RestController
 public class CacheController {
@@ -25,6 +26,7 @@ public class CacheController {
     }
 
     @GetMapping("/get/{key}")
+    @SentinelResource(value = "cacheResource", blockHandler = "handleBlock")
     public Mono<String> get(@PathVariable String key) {
         return cache.get(key);
     }
@@ -38,5 +40,9 @@ public class CacheController {
     @DeleteMapping("/delete/{key}")
     public Mono<Void> delete(@PathVariable String key) {
         return cache.delete(key);
+    }
+    // 限流/熔断处理函数
+    public Mono<String> handleBlock(BlockException ex) {
+        return Mono.just("Request blocked by Sentinel");
     }
 }

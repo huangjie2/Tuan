@@ -9,25 +9,35 @@ version = '0.1.0-SNAPSHOT'
 
 repositories {
     maven { url 'https://maven.aliyun.com/repository/public' }
+    maven { url 'https://repo.spring.io/milestone' }           // Spring 里程碑仓库
     mavenCentral()
+    google()
+    gradlePluginPortal()
 }
 
+// 检查并修正版本号兼容性：
 ext {
-    set('springCloudVersion', "2024.0.0") // 指定 Spring Cloud 版本
+    springBootVersion = "3.4.1"
+    springCloudVersion = "2024.0.0"         // 确保与 Spring Boot 3.4.1 兼容
+    springCloudAlibabaVersion = "2022.0.0.0-RC2"  // 需验证此版本是否存在
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap' // 可选，用于加载 bootstrap.yml
-    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config' // Nacos 配置中心
-    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery' // Nacos 服务发现
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config'
+    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery'
+    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel'
+    implementation 'com.alibaba.cloud:spring-cloud-alibaba-sentinel-gateway'
+    implementation 'com.alibaba.csp:sentinel-datasource-nacos'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:2022.0.0.0-RC2" // Spring Cloud Alibaba 版本
+        mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
     }
 }
 
